@@ -19,8 +19,8 @@ class ExampleListener {
     }
   }
 
-
-  @ApplicationModuleListener
+// Cannot use ApplicationModuleListener here? It only triggers after 10 seconds and leads to an infinite Loop
+  @EventListener
   public void handleErrorHappened(ErrorHappened event) {
     System.out.println("Handled error: " + event.targetIdentifier);
   }

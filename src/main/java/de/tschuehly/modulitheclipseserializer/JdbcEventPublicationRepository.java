@@ -185,6 +185,15 @@ class JdbcEventPublicationRepository implements EventPublicationRepository, Bean
         serializer.serialize(event));
   }
 
+  @Transactional
+  public void markCompleteId(UUID identifier, Instant completionDate) {
+    operations.update("""
+              UPDATE EVENT_PUBLICATION
+              SET COMPLETION_DATE = ?
+              where id = ?
+        """,Timestamp.from(completionDate), identifier);
+  }
+
   /*
    * (non-Javadoc)
    * @see org.springframework.modulith.events.core.EventPublicationRepository#findIncompletePublicationsByEventAndTargetIdentifier(java.lang.Object, org.springframework.modulith.events.core.PublicationTargetIdentifier)
