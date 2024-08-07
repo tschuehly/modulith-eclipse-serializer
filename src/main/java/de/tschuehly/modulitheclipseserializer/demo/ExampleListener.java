@@ -14,7 +14,7 @@ class ExampleListener {
   public void handleTestDomain2Event(TestDomain2 event) {
     System.out.println("Received event: " + event.name());
     counter = counter + 1;
-    if (counter == 2) {
+    if (counter % 3 == 0) {
       throw new RuntimeException("Some Error occured");
     }
   }

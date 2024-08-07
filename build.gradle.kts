@@ -15,14 +15,21 @@ java {
 
 repositories {
     mavenCentral()
+    maven {
+        url = uri("https://repo.spring.io/snapshot")
+        mavenContent {
+            snapshotsOnly()
+        }
+    }
 }
 
-extra["springModulithVersion"] = "1.2.1"
+extra["springModulithVersion"] = "1.3.0-SNAPSHOT"
 
 dependencies {
     implementation("org.springframework.modulith:spring-modulith-starter-core")
     implementation("org.eclipse.serializer:serializer:1.3.2")
     implementation("org.springframework.modulith:spring-modulith-starter-core")
+    implementation("org.springframework.modulith:spring-modulith-starter-jdbc")
     implementation("org.springframework.modulith:spring-modulith-events-core")
     implementation("org.springframework.modulith:spring-modulith-events-api")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")

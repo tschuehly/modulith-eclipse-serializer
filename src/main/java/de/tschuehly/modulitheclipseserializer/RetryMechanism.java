@@ -21,11 +21,11 @@ public class RetryMechanism {
   private static final Logger log = LoggerFactory.getLogger(RetryMechanism.class);
   private final IncompleteEventPublications incompleteEventPublications;
   private final ApplicationEventPublisher applicationEventPublisher;
-  private final JdbcEventPublicationRepository eventPublicationRepository;
+  private final EventPublicationRepository eventPublicationRepository;
   private final EventPublicationRegistry eventPublicationRegistry;
 
   public RetryMechanism(IncompleteEventPublications incompleteEventPublications,
-      ApplicationEventPublisher applicationEventPublisher, JdbcEventPublicationRepository eventPublicationRepository,
+      ApplicationEventPublisher applicationEventPublisher, EventPublicationRepository eventPublicationRepository,
       EventPublicationRegistry eventPublicationRegistry) {
     this.incompleteEventPublications = incompleteEventPublications;
     this.applicationEventPublisher = applicationEventPublisher;
@@ -33,10 +33,10 @@ public class RetryMechanism {
     this.eventPublicationRegistry = eventPublicationRegistry;
   }
 
-  @Scheduled(fixedRate = 10, timeUnit = TimeUnit.SECONDS)
+  @Scheduled(fixedRate = 2, timeUnit = TimeUnit.SECONDS)
   public void retries() {
     completePublicationsOlderThan(Duration.ofSeconds(10));
-    incompleteEventPublications.resubmitIncompletePublicationsOlderThan(Duration.ofSeconds(5));
+    incompleteEventPublications.resubmitIncompletePublicationsOlderThan(Duration.ofSeconds(2));
   }
 
   @Transactional
@@ -47,7 +47,7 @@ public class RetryMechanism {
         .forEach(it -> {
           log.info(it.getTargetIdentifier() + ": set completed");
           applicationEventPublisher.publishEvent(new ErrorHappened(it.getTargetIdentifier().getValue()));
-          eventPublicationRepository.markCompleteId(it.getIdentifier(), Instant.now());
+          eventPublicationRepository.markCompleted(it, Instant.now());
         });
   }
 

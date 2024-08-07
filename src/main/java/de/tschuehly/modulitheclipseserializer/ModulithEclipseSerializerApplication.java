@@ -27,15 +27,10 @@ public class ModulithEclipseSerializerApplication {
 
     @GetMapping
     @ResponseBody
+    @Transactional
     public String  publishEvent(){
-      run();
-      return "published";
-    }
-
-    @Transactional()
-    void run(){
       applicationEventPublisher.publishEvent(new TestDomain2("domain2", new TestDomain("domain1")));
-      applicationEventPublisher.publishEvent(new TestDomain2("domain3", new TestDomain("domain4")));
+      return "published";
     }
   }
 
